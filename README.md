@@ -1,69 +1,61 @@
-def display_question(question, options, correct_answer):
-    """Displays a question and its options. Returns True if the answer is correct."""
-    print(f"\n{question}")
-    for i, option in enumerate(options, start=1):
-        print(f"{i}. {option}")
+# Quiz Data
+quiz = [
+    {
+        "question": "What is the capital of France?",
+        "options": ["A. Berlin", "B. Madrid", "C. Paris", "D. Rome"],
+        "answer": "C"
+    },
+    {
+        "question": "What is 5 + 3?",
+        "options": ["A. 5", "B. 8", "C. 10", "D. 15"],
+        "answer": "B"
+    },
+    {
+        "question": "Which programming language is known for its simplicity?",
+        "options": ["A. Python", "B. C++", "C. Java", "D. Ruby"],
+        "answer": "A"
+    }
+]
 
-    while True:
-        try:
-            user_input = int(input("Your answer (1/2/3/4): "))
-            if 1 <= user_input <= len(options):
-                break
-            else:
-                print("Invalid choice. Please choose a valid option.")
-        except ValueError:
-            print("Invalid input. Please enter a number.")
+# Function Definitions
+def display_question(question_data):
+    print("\n" + question_data["question"])
+    for option in question_data["options"]:
+        print(option)
 
-    if options[user_input - 1] == correct_answer:
-        print("Correct!")
-        return True
-    else:
-        print(f"Wrong! The correct answer is: {correct_answer}")
-        return False
+def validate_input(user_input, options):
+    return user_input.upper() in options
 
-def run_quiz(questions):
-    """Runs the quiz game."""
-    score = 0
-    total_questions = len(questions)
+def check_answer(user_answer, correct_answer):
+    return user_answer.upper() == correct_answer
 
-    for q in questions:
-        is_correct = display_question(q['question'], q['options'], q['answer'])
-        if is_correct:
-            score += 1
-
-    print("\nQuiz Completed!")
-    print(f"Your final score is {score}/{total_questions}")
-
+def display_score(score, total_questions):
+    print(f"\nYour final score is {score}/{total_questions}.")
     if score == total_questions:
-        print("Excellent work!")
+        print("Excellent job!")
     elif score > total_questions // 2:
-        print("Good job! Keep practicing.")
+        print("Well done!")
     else:
-        print("Better luck next time. Keep learning!")
+        print("Keep practicing!")
 
+# Main Program
 def main():
-    """Main function to execute the quiz."""
-    # Define quiz questions, options, and answers
-    questions = [
-        {
-            'question': "What is the capital of France?",
-            'options': ["Berlin", "Madrid", "Paris", "Rome"],
-            'answer': "Paris"
-        },
-        {
-            'question': "Which programming language is known for its snake logo?",
-            'options': ["Java", "C++", "Python", "Ruby"],
-            'answer': "Python"
-        },
-        {
-            'question': "What is 5 + 3 * 2?",
-            'options': ["16", "13", "11", "10"],
-            'answer': "11"
-        }
-    ]
+    score = 0
+    for question in quiz:
+        display_question(question)
+        user_answer = input("Enter your answer (A/B/C/D): ").strip().upper()
+        while not validate_input(user_answer, ['A', 'B', 'C', 'D']):
+            print("Invalid input. Please enter A, B, C, or D.")
+            user_answer = input("Enter your answer (A/B/C/D): ").strip().upper()
 
-    print("Welcome to the Basic Quiz Game!")
-    run_quiz(questions)
+        if check_answer(user_answer, question["answer"]):
+            print("Correct!")
+            score += 1
+        else:
+            print(f"Wrong. The correct answer is {question['answer']}.")
 
-if _name_ == "_main_":
+    display_score(score, len(quiz))
+
+# Run the game
+if __name__ == "__main__":
     main()
